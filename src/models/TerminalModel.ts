@@ -9,20 +9,38 @@ export class TerminalModel {
         "",
     ];
 
+    private commands: string[] = [];
+
+    private commandIter: number = 0;
+
     constructor() {
         makeAutoObservable(this);
     }
 
     public submit() {
-        this.lines.push(this.input);
+        this.commands.push(this.input);
+        this.pushLine("> "+this.input);
         this.setInput("");
+        this.commandIter = this.commands.length -1;
+    }
+
+    public history() {
+        if (this.commandIter < 0) 
+            return;
+        this.setInput(this.commands[this.commandIter]);
+        this.commandIter--;
     }
 
     public setInput(input: string) {
         this.input = input;
     }
 
-    public push(newline: string) {
+    public pushCommand(newline: string) {
+        this.commands.push(newline);
+        this.commandIter = this.commands.length -1;
+    }
+
+    public pushLine(newline: string) {
         this.lines.push(newline);
     }
 }

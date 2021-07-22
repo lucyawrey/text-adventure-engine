@@ -19,12 +19,28 @@ const Terminal = observer(({ model }: TerminalProps) => {
     function focus() {
         if (inputRef.current) {
             inputRef.current.focus();
+            cursorEnd();
         }
     }
 
-    function enter(event: React.KeyboardEvent<HTMLInputElement>) {
-        if (event.key === "Enter") {
-            model.submit();
+    function cursorEnd() {
+        if (inputRef.current) {
+            inputRef.current.selectionStart = model.input.length;
+            inputRef.current.selectionEnd = model.input.length;
+        }
+    }
+
+    function keyDown(event: React.KeyboardEvent<HTMLInputElement>) {
+        switch (event.key) {
+            case "Enter":
+                model.submit();
+                break;
+            case "ArrowUp":
+                model.history();
+                cursorEnd();
+                break;
+            default:
+                return;
         }
     }
 
@@ -34,7 +50,7 @@ const Terminal = observer(({ model }: TerminalProps) => {
 
             <span className={styles.line}>
                 &gt;&nbsp;
-                <input ref={inputRef} className={styles.input} type="text" value={model.input} onChange={e => model.setInput(e.target.value)} onKeyDown={enter}></input>
+                <input ref={inputRef} className={styles.input} type="text" value={model.input} onChange={e => model.setInput(e.target.value)} onKeyDown={keyDown}></input>
             </span>
         </div>
     );
