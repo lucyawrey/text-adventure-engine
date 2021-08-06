@@ -17,15 +17,19 @@ export class TerminalModel {
         makeAutoObservable(this);
     }
 
+    public resetIter() {
+        this.commandIter = this.commands.length - 1;
+    }
+
     public submit() {
         this.commands.push(this.input);
-        this.pushLine("> "+this.input);
+        this.pushLine("> " + this.input);
         this.setInput("");
-        this.commandIter = this.commands.length -1;
+        this.commandIter = this.commands.length - 1;
     }
 
     public history() {
-        if (this.commandIter < 0) 
+        if (this.commandIter < 0)
             return;
         this.setInput(this.commands[this.commandIter]);
         this.commandIter--;
@@ -37,7 +41,7 @@ export class TerminalModel {
 
     public pushCommand(newline: string) {
         this.commands.push(newline);
-        this.commandIter = this.commands.length -1;
+        this.resetIter();
     }
 
     public pushLine(newline: string) {

@@ -1,7 +1,7 @@
 import styles from "../styles/Terminal.module.scss";
 import { observer } from "mobx-react-lite";
 import { TerminalModel } from "../models/TerminalModel";
-import { useRef } from "react";
+import { ChangeEvent, useRef } from "react";
 
 interface TerminalProps {
     model: TerminalModel;
@@ -30,6 +30,11 @@ const Terminal = observer(({ model }: TerminalProps) => {
         }
     }
 
+    function change(event: ChangeEvent<HTMLInputElement>) {
+        model.setInput(event.target.value)
+        model.resetIter();
+    }
+
     function keyDown(event: React.KeyboardEvent<HTMLInputElement>) {
         switch (event.key) {
             case "Enter":
@@ -50,7 +55,7 @@ const Terminal = observer(({ model }: TerminalProps) => {
 
             <span className={styles.line}>
                 &gt;&nbsp;
-                <input ref={inputRef} className={styles.input} type="text" value={model.input} onChange={e => model.setInput(e.target.value)} onKeyDown={keyDown}></input>
+                <input ref={inputRef} className={styles.input} type="text" value={model.input} onChange={change} onKeyDown={keyDown}></input>
             </span>
         </div>
     );
